@@ -2,9 +2,25 @@
 
 session_start();
 
+if(isset($_SESSION['user_id'])){
+
+    if($_SESSION['role'] == "teacher"){
+
+        header("Location: teacher/dashboard.php");
+
+    }else{
+
+        header("Location: student/dashboard.php");
+
+    }
+
+    exit();
+}
+
 include 'config/database.php';
 
 ?>
+
 <?php
 
 $error = "";
@@ -42,14 +58,13 @@ if($user['role'] == "teacher"){
 
         }else{
 
-            echo "Invalid Username or Password";
+           $error = "Invalid Username or Password!";
 
         }
 
     }else{
 
-        echo "Invalid Username or Password";
-
+      $error = "Invalid Username or Password!";
     }
 
 }
@@ -149,6 +164,15 @@ if($user['role'] == "teacher"){
             <h2>Welcome Back</h2>
 
             <p>Login to continue</p>
+            <?php if(!empty($error)) : ?>
+
+    <div class="error-message">
+
+        <?php echo $error; ?>
+
+    </div>
+
+<?php endif; ?>
 
             <div class="role-selector">
 
