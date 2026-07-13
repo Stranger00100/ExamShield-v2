@@ -111,13 +111,13 @@ if($user['role'] == "teacher"){
 
         <ul>
 
-            <li><a href="#">Home</a></li>
+            <li><a href="index.php">Home</a></li>
 
-            <li><a href="#">Features</a></li>
+          <a href="index.php#features">Features</a>
 
-            <li><a href="#">About</a></li>
+<a href="index.php#about">About</a>
 
-            <li><a href="#">Contact</a></li>
+<a href="index.php#contact">Contact</a>
 
         </ul>
 
@@ -148,13 +148,9 @@ if($user['role'] == "teacher"){
                 room-based exams and student activity monitoring.
 
             </p>
-
-            <button>
-
-                Learn More
-
-            </button>
-
+<a href="index.php#about" class="learn-btn">
+    Learn More
+</a>
         </div>
 
         <!-- Right Side -->
@@ -220,11 +216,11 @@ if($user['role'] == "teacher"){
 
             </form>
 
-            <a href="#">
+           <a href="forgot-password.php">
 
-                Forgot Password?
+    Forgot Password?
 
-            </a>
+</a>
 
         </div>
 

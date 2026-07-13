@@ -37,9 +37,13 @@ header{
 
     z-index:1000;
 
-    backdrop-filter:blur(15px);
+  header{
 
-    background:rgba(8,15,28,.65);
+    background:rgba(18,35,88,.20);
+
+    backdrop-filter:blur(12px);
+
+}
 
 }
 

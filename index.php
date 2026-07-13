@@ -220,7 +220,7 @@
 
     <script src="assets/js/index.js"></script>
     
-    <div class="bg-circle circle1"></div>
+<div class="bg-circle circle1"></div>
 <div class="bg-circle circle2"></div>
 <div class="bg-circle circle3"></div>
 
