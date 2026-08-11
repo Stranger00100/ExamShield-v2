@@ -80,7 +80,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt->close();
             
             if (isset($_POST['navigate']) && $_POST['navigate'] === 'next') {
-                header("Location: exam_questions.php?id=" . $exam_id);
+              header("Location: create_questions.php?id=" . $exam_id);
             } else {
                 header("Location: dashboard.php?success=exam_saved");
             }
