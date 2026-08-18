@@ -1,75 +1,53 @@
 <?php
-
 session_start();
 
-if(isset($_SESSION['user_id'])){
-
-    if($_SESSION['role'] == "teacher"){
-
+if (isset($_SESSION['user_id'])) {
+    if ($_SESSION['role'] === "teacher") {
         header("Location: teacher/dashboard.php");
-
-    }else{
-
+    } else {
         header("Location: student/dashboard.php");
-
     }
-
     exit();
 }
 
 include 'config/database.php';
 
-?>
-
-<?php
-
 $error = "";
 
-if(isset($_POST['login'])){
-
+if (isset($_POST['login'])) {
     $username = trim($_POST['username']);
     $password = trim($_POST['password']);
+    $selected_role = trim($_POST['role'] ?? 'teacher');
 
-    $sql = "SELECT * FROM users WHERE username='$username'";
+    // Query user by username AND selected role
+    $stmt = $conn->prepare("SELECT * FROM users WHERE username = ? AND role = ?");
+    $stmt->bind_param("ss", $username, $selected_role);
+    $stmt->execute();
+    $result = $stmt->get_result();
 
-    $result = mysqli_query($conn, $sql);
+    if ($result && $result->num_rows === 1) {
+        $user = $result->fetch_assoc();
 
-    if(mysqli_num_rows($result) == 1){
+        if (password_verify($password, $user['password'])) {
+            $_SESSION['user_id'] = $user['id'];
+            $_SESSION['username'] = $user['username'];
+            $_SESSION['full_name'] = $user['full_name'];
+            $_SESSION['role'] = $user['role'];
 
-        $user = mysqli_fetch_assoc($result);
-
-        if(password_verify($password, $user['password'])){
-
-           $_SESSION['user_id'] = $user['id'];
-$_SESSION['username'] = $user['username'];
-$_SESSION['role'] = $user['role'];
-
-if($user['role'] == "teacher"){
-
-    header("Location: teacher/dashboard.php");
-    exit();
-
-}else{
-
-    header("Location: student/dashboard.php");
-    exit();
-
-}
-
-        }else{
-
-           $error = "Invalid Username or Password!";
-
+            if ($user['role'] === "teacher") {
+                header("Location: teacher/dashboard.php");
+            } else {
+                header("Location: student/dashboard.php");
+            }
+            exit();
+        } else {
+            $error = "Invalid Password!";
         }
-
-    }else{
-
-      $error = "Invalid Username or Password!";
+    } else {
+        $error = "Account not found for selected role (" . ucfirst($selected_role) . ")!";
     }
-
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -152,8 +130,7 @@ if($user['role'] == "teacher"){
     Learn More
 </a>
         </div>
-
-        <!-- Right Side -->
+<!-- Right Side -->
 
         <div class="login-card">
 
@@ -170,27 +147,20 @@ if($user['role'] == "teacher"){
 
 <?php endif; ?>
 
+            <!-- Role Selector -->
             <div class="role-selector">
-
-                <button class="active">
-
+                <button type="button" class="role-btn active" data-role="teacher" onclick="setRole('teacher', this)">
                     <i class="fa-solid fa-chalkboard-user"></i>
-
                     Teacher
-
                 </button>
-
-                <button>
-
+                <button type="button" class="role-btn" data-role="student" onclick="setRole('student', this)">
                     <i class="fa-solid fa-user-graduate"></i>
-
                     Student
-
                 </button>
-
             </div>
 
             <form method="POST">
+                <input type="hidden" name="role" id="selected_role" value="teacher">
 
                 <input
     type="text"
@@ -227,6 +197,17 @@ if($user['role'] == "teacher"){
     </section>
 
     <script src="assets/js/login.js"></script>
+
+    <script>
+    function setRole(role, element) {
+        document.getElementById('selected_role').value = role;
+        
+        // Toggle active tab visual state
+        const buttons = document.querySelectorAll('.role-selector button');
+        buttons.forEach(btn => btn.classList.remove('active'));
+        element.classList.add('active');
+    }
+    </script>
 
 </body>
 

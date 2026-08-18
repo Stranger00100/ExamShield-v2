@@ -1,0 +1,155 @@
+/* Header & Controls */
+.students-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.students-header h2 {
+    margin: 0 0 4px 0;
+    font-size: 1.5rem;
+    color: #0f172a;
+}
+
+.students-header p {
+    margin: 0;
+    color: #64748b;
+    font-size: 0.9rem;
+}
+
+/* Filter Bar */
+.filter-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 1rem 1.25rem;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.filter-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.filter-group label {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #475569;
+}
+
+.filter-select {
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    border: 1px solid #cbd5e1;
+    background: #f8fafc;
+    font-size: 0.9rem;
+    color: #0f172a;
+    outline: none;
+}
+
+/* Summary Badges */
+.stats-summary {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.summary-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 1rem 1.25rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.summary-val {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #0f172a;
+}
+
+.summary-lbl {
+    font-size: 0.85rem;
+    color: #64748b;
+}
+
+/* Data Table */
+.table-container {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+}
+
+.students-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+.students-table th {
+    background: #f8fafc;
+    padding: 1rem;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #475569;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.students-table td {
+    padding: 1rem;
+    font-size: 0.9rem;
+    color: #1e293b;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.students-table tr:last-child td {
+    border-bottom: none;
+}
+
+/* Status Signals */
+.signal-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.signal-active {
+    background: #dcfce7;
+    color: #15803d;
+}
+
+.signal-active .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #22c55e;
+    box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.3);
+}
+
+.signal-inactive {
+    background: #f1f5f9;
+    color: #64748b;
+}
+
+.signal-inactive .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #94a3b8;
+}

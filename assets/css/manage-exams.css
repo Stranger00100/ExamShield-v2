@@ -1,0 +1,127 @@
+.manage-exams-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.manage-exams-header h2 {
+    margin: 0 0 4px 0;
+    font-size: 1.5rem;
+    color: #0f172a;
+}
+
+.manage-exams-header p {
+    margin: 0;
+    color: #64748b;
+    font-size: 0.9rem;
+}
+
+.exams-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 20px;
+}
+
+.exam-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 1.25rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.exam-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
+}
+
+.exam-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.exam-title {
+    margin: 0 0 4px 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #0f172a;
+}
+
+.exam-subject {
+    font-size: 0.8rem;
+    color: #64748b;
+}
+
+.status-badge {
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.status-active { background: #dcfce7; color: #15803d; }
+.status-draft { background: #fef9c3; color: #a16207; }
+.status-ended { background: #fee2e2; color: #b91c1c; }
+
+.exam-card-body {
+    padding: 12px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.info-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.875rem;
+}
+
+.info-row .label {
+    color: #64748b;
+}
+
+.info-row .value {
+    color: #1e293b;
+    font-weight: 500;
+}
+
+.code-text {
+    font-family: monospace;
+    font-weight: 700 !important;
+    color: #2563eb !important;
+}
+
+.exam-card-actions {
+    display: flex;
+    gap: 8px;
+    padding-top: 12px;
+    border-top: 1px solid #f1f5f9;
+}
+
+.btn-sm {
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.btn-view { background: #f1f5f9; color: #334155; }
+.btn-view:hover { background: #e2e8f0; }
+
+.btn-edit { background: #eff6ff; color: #2563eb; }
+.btn-edit:hover { background: #dbeafe; }
+
+.btn-delete { background: #fef2f2; color: #ef4444; }
+.btn-delete:hover { background: #fee2e2; }

@@ -1,12 +1,39 @@
 <?php
 session_start();
 
-
 require_once '../config/database.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
-    // Extract incoming form variables
+    // ACTION 1: Host Exam (Triggered from create_questions.php)
+    if (isset($_POST['action']) && $_POST['action'] === 'host_exam') {
+        $exam_id = intval($_POST['exam_id'] ?? 0);
+
+        if ($exam_id <= 0) {
+            header("Location: dashboard.php?error=invalid_id");
+            exit();
+        }
+
+        // Generate final active room code and set status to Active
+        $room_code = "ES" . strtoupper(substr(md5(uniqid(mt_rand(), true)), 0, 4));
+        $status    = 'Active';
+
+        $sql = "UPDATE exams SET room_code = ?, status = ? WHERE id = ?";
+        if ($stmt = $conn->prepare($sql)) {
+            $stmt->bind_param("ssi", $room_code, $status, $exam_id);
+            if ($stmt->execute()) {
+                $stmt->close();
+                header("Location: manage_exam.php?id=" . $exam_id . "&room_code=" . $room_code . "&msg=hosted");
+                exit();
+            } else {
+                die("Execution Error: " . $stmt->error);
+            }
+        } else {
+            die("Preparation Error: " . $conn->error);
+        }
+    }
+
+    // ACTION 2: Create Exam Draft (Step 1 Form Submission)
     $exam_title    = trim($_POST['exam_title'] ?? '');
     $subject       = trim($_POST['subject'] ?? '');
     $semester      = trim($_POST['semester'] ?? '');
@@ -24,18 +51,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $created_by    = $_SESSION['user_id'] ?? null; 
     $status        = 'Draft';
 
-    // Temporary Step 2 Fix: Generate a unique random room code (e.g., ESC42P)
-    // This prevents the duplicate key '' error until Part 2 is built.
+    // Temporary room code assigned on draft creation
     $room_code     = "ES" . strtoupper(substr(md5(uniqid(mt_rand(), true)), 0, 4));
 
-    // Server-Side Fallback Calculations
+    // Server-Side Calculations
     $start_minutes = (int)date('H', strtotime($start_time)) * 60 + (int)date('i', strtotime($start_time));
     $end_minutes   = (int)date('H', strtotime($end_time)) * 60 + (int)date('i', strtotime($end_time));
     
     if ($end_minutes < $start_minutes) {
         $end_minutes += 24 * 60; 
     }
-    $duration = $end_minutes - $start_minutes;
+    $duration    = $end_minutes - $start_minutes;
     $total_marks = $part_a_marks + $part_b_marks;
 
     if (empty($exam_title) || empty($subject) || empty($exam_date) || empty($start_time) || empty($end_time)) {
@@ -43,7 +69,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit();
     }
 
-    // Added room_code to the columns and an extra ? placeholder
     $sql = "INSERT INTO exams (
                 title, subject, semester, academic_year, language, exam_type, 
                 exam_date, start_time, end_time, duration, max_students, 
@@ -51,8 +76,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
     if ($stmt = $conn->prepare($sql)) {
-        
-        // Updated bind format string to accommodate the extra string variable ("sssssssssiiiiiiiis")
         $stmt->bind_param(
             "sssssssssiiiiiiiis", 
             $exam_title, 
@@ -80,7 +103,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt->close();
             
             if (isset($_POST['navigate']) && $_POST['navigate'] === 'next') {
-              header("Location: create_questions.php?id=" . $exam_id);
+                header("Location: create_questions.php?id=" . $exam_id);
             } else {
                 header("Location: dashboard.php?success=exam_saved");
             }

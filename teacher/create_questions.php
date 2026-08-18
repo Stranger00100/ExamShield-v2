@@ -99,6 +99,7 @@ $edit_question = [
     'marks' => $exam['part_a_marks']
 ];
 
+
 if (isset($_GET['action']) && $_GET['action'] === 'edit' && isset($_GET['question_id'])) {
     $edit_q_id = intval($_GET['question_id']);
     $stmt_edit = $conn->prepare("SELECT * FROM questions WHERE id = ? AND exam_id = ?");
@@ -131,7 +132,8 @@ $part_a_count = count($part_a_questions);
 $part_b_count = count($part_b_questions);
 
 // Variables for sidebar/header includes
-$activePage = "manage_exam";
+// Update to create_exam so the correct menu item is highlighted
+$activePage = "create_exam";
 $pageTitle = "Create Questions";
 ?>
 <!DOCTYPE html>
@@ -155,9 +157,22 @@ $pageTitle = "Create Questions";
 
     <div class="dashboard-content fade-in">
         
-        <!-- Action bar -->
-        <div style="display: flex; justify-content: flex-end; margin-bottom: 20px;">
-            <a href="manage_exams.php" class="btn-primary" style="background-color: #64748b; text-decoration: none;">← Back to Exams</a>
+      <!-- Action Bar with Host Exam Card -->
+        <div style="display: flex; justify-content: space-between; align-items: center; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 1rem 1.5rem; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.04);">
+            <div>
+                <h3 style="margin: 0 0 0.25rem 0; font-size: 1.1rem; color: #0f172a; font-weight: 600;">Ready to Publish?</h3>
+                <p style="margin: 0; font-size: 0.875rem; color: #64748b;">Once hosted, students can join this exam using the generated Room ID.</p>
+            </div>
+            <div style="display: flex; gap: 12px; align-items: center;">
+                <form action="save_exam.php" method="POST" style="margin: 0;">
+                    <input type="hidden" name="exam_id" value="<?php echo $exam_id; ?>">
+                    <input type="hidden" name="action" value="host_exam">
+                    <button type="submit" class="btn-primary" style="background-color: #10b981; border: none; padding: 0.6rem 1.25rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 6px;">
+                        <i data-lucide="play-circle" style="width: 18px; height: 18px;"></i> Host Exam Now
+                    </button>
+                </form>
+                <a href="manage_exams.php" class="btn-primary" style="background-color: #64748b; text-decoration: none; padding: 0.6rem 1.25rem;">← Back to Exams</a>
+            </div>
         </div>
 
         <?php if (!empty($error_message)): ?>

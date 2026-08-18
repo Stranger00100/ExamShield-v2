@@ -1,0 +1,142 @@
+/* Header & Filter Controls */
+.reports-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.reports-header h2 {
+    margin: 0 0 4px 0;
+    font-size: 1.5rem;
+    color: #0f172a;
+}
+
+.reports-header p {
+    margin: 0;
+    color: #64748b;
+    font-size: 0.9rem;
+}
+
+/* Filter Card */
+.filter-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 1rem 1.25rem;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.filter-group {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.filter-group label {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #475569;
+}
+
+.filter-select {
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    border: 1px solid #cbd5e1;
+    background: #f8fafc;
+    font-size: 0.9rem;
+    color: #0f172a;
+    outline: none;
+}
+
+/* Summary Analytics Cards */
+.metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.metric-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.metric-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.icon-blue { background: #eff6ff; color: #2563eb; }
+.icon-green { background: #dcfce7; color: #16a34a; }
+.icon-purple { background: #f3e8ff; color: #9333ea; }
+.icon-amber { background: #fef3c7; color: #d97706; }
+
+.metric-info h4 {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #0f172a;
+}
+
+.metric-info p {
+    margin: 0;
+    font-size: 0.85rem;
+    color: #64748b;
+}
+
+/* Data Table */
+.table-container {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+}
+
+.reports-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+.reports-table th {
+    background: #f8fafc;
+    padding: 1rem;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #475569;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.reports-table td {
+    padding: 1rem;
+    font-size: 0.9rem;
+    color: #1e293b;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.grade-badge {
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    display: inline-block;
+}
+
+.grade-pass { background: #dcfce7; color: #15803d; }
+.grade-fail { background: #fee2e2; color: #b91c1c; }

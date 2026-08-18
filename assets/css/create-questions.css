@@ -371,3 +371,71 @@
         grid-column: span 1;
     }
 }
+/* Page Header & Host Action Banner */
+.host-banner-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+}
+
+.host-banner-info h5 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #0f172a;
+    margin: 0 0 0.25rem 0;
+}
+
+.host-banner-info p {
+    font-size: 0.875rem;
+    color: #64748b;
+    margin: 0;
+}
+
+.btn-host-exam {
+    background-color: #10b981;
+    color: #ffffff;
+    font-weight: 600;
+    font-size: 0.95rem;
+    padding: 0.65rem 1.5rem;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.btn-host-exam:hover {
+    background-color: #059669;
+}
+
+.btn-host-exam:active {
+    transform: scale(0.98);
+}
+
+/* Exam Info Cards */
+.exam-summary-card {
+    background: #ffffff;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+/* Question Pool and Form Cards */
+.question-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 1.25rem;
+    margin-bottom: 1rem;
+}
