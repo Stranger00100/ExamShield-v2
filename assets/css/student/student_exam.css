@@ -1,0 +1,344 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+body.exam-screen-body {
+    background-color: #0f172a;
+    color: #f8fafc;
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Exam Top Bar */
+.exam-navbar {
+    height: 64px;
+    background-color: #0f172a;
+    border-bottom: 1px solid #1e293b;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 24px;
+    flex-shrink: 0;
+}
+
+.exam-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.exam-brand .brand-logo {
+    width: 36px;
+    height: 36px;
+    background: #1e293b;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #38bdf8;
+    font-size: 1.1rem;
+}
+
+.exam-brand h3 {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #ffffff;
+}
+
+.exam-timer-box {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #1e293b;
+    border: 1px solid #334155;
+    padding: 8px 18px;
+    border-radius: 10px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #38bdf8;
+    letter-spacing: 1px;
+}
+
+.exam-actions-top {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.btn-swap-set {
+    background: #334155;
+    color: #e2e8f0;
+    border: 1px solid #475569;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.btn-swap-set:hover {
+    background: #475569;
+    color: #ffffff;
+}
+
+.btn-exam-finish {
+    background: #ef4444;
+    color: #ffffff;
+    border: none;
+    padding: 8px 20px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.btn-exam-finish:hover {
+    background: #dc2626;
+}
+
+/* Exam Layout Splitting */
+.exam-split-layout {
+    display: flex;
+    flex-grow: 1;
+    height: calc(100vh - 64px);
+}
+
+/* Left Pane: Question Section */
+.exam-question-pane {
+    width: 45%;
+    background-color: #ffffff;
+    color: #0f172a;
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid #e2e8f0;
+}
+
+.question-nav-tabs {
+    display: flex;
+    background: #f8fafc;
+    border-bottom: 1px solid #e2e8f0;
+    padding: 8px 16px 0;
+    gap: 8px;
+}
+
+.part-tab-btn {
+    padding: 10px 20px;
+    background: transparent;
+    border: none;
+    border-bottom: 3px solid transparent;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #64748b;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.part-tab-btn.active {
+    color: #2563eb;
+    border-bottom-color: #2563eb;
+    background: #ffffff;
+    border-radius: 6px 6px 0 0;
+}
+
+.question-scroll-content {
+    padding: 28px;
+    overflow-y: auto;
+    flex-grow: 1;
+}
+
+.question-header-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.question-header-info h4 {
+    font-size: 1.25rem;
+    font-weight: 700;
+}
+
+.badge-difficulty {
+    background: #dbeafe;
+    color: #1e40af;
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 12px;
+}
+
+.question-body-text {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: #334155;
+    margin-bottom: 24px;
+}
+
+.code-io-box {
+    margin-bottom: 16px;
+}
+
+.code-io-box label {
+    display: block;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #64748b;
+    margin-bottom: 6px;
+}
+
+.code-io-box pre {
+    background: #f1f5f9;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 12px 16px;
+    font-family: monospace;
+    font-size: 0.88rem;
+    color: #0f172a;
+    white-space: pre-wrap;
+}
+
+/* Right Pane: Monaco Workspace */
+.exam-editor-pane {
+    width: 55%;
+    background-color: #1e1e1e;
+    display: flex;
+    flex-direction: column;
+}
+
+.editor-toolbar {
+    background-color: #252526;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #333333;
+}
+
+.editor-lang-badge {
+    color: #94a3b8;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.editor-container-slot {
+    flex-grow: 1;
+    width: 100%;
+}
+
+.editor-footer-status {
+    background-color: #1e293b;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid #334155;
+}
+
+.auto-save-indicator {
+    color: #94a3b8;
+    font-size: 0.8rem;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+/* VS Code Terminal / Output Drawer */
+.terminal-drawer {
+    height: 220px;
+    background-color: #181818;
+    border-top: 1px solid #333333;
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+}
+
+.terminal-tabs {
+    display: flex;
+    background: #1f1f1f;
+    border-bottom: 1px solid #2d2d2d;
+    padding: 0 16px;
+    gap: 16px;
+}
+
+.terminal-tab-btn {
+    background: transparent;
+    border: none;
+    border-bottom: 2px solid transparent;
+    color: #858585;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    padding: 8px 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.terminal-tab-btn.active {
+    color: #ffffff;
+    border-bottom-color: #007acc;
+}
+
+.terminal-content-area {
+    flex: 1;
+    padding: 12px 16px;
+    overflow-y: auto;
+    font-family: 'Consolas', 'Courier New', monospace;
+    font-size: 0.88rem;
+}
+
+.terminal-output {
+    color: #cccccc;
+    white-space: pre-wrap;
+    line-height: 1.4;
+}
+
+.terminal-output.error {
+    color: #f87171;
+}
+
+.custom-input-textarea {
+    width: 100%;
+    height: 100%;
+    background: #181818;
+    color: #e2e8f0;
+    border: none;
+    outline: none;
+    resize: none;
+    font-family: 'Consolas', 'Courier New', monospace;
+    font-size: 0.88rem;
+}
+
+.btn-run-code {
+    background: #0ea5e9;
+    color: #ffffff;
+    border: none;
+    padding: 6px 14px;
+    border-radius: 6px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: 0.2s ease;
+}
+
+.btn-run-code:hover {
+    background: #0284c7;
+}
+
+.btn-run-code:disabled {
+    background: #475569;
+    cursor: not-allowed;
+}

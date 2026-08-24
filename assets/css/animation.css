@@ -1,0 +1,1973 @@
+/* =========================================================
+   EXAM SHIELD
+   PREMIUM HOMEPAGE ANIMATIONS
+========================================================= */
+
+
+/* =========================================================
+   1. GLOBAL ANIMATION VARIABLES
+========================================================= */
+
+:root {
+    --animation-speed-fast: 0.3s;
+    --animation-speed: 0.6s;
+    --animation-speed-slow: 1s;
+}
+
+
+/* =========================================================
+   2. PAGE FADE-IN
+========================================================= */
+
+body {
+    animation: pageFadeIn 0.8s ease forwards;
+}
+
+
+@keyframes pageFadeIn {
+
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+
+/* =========================================================
+   3. PREMIUM BACKGROUND GLOW
+========================================================= */
+
+body::before {
+
+    content: "";
+
+    position: fixed;
+
+    width: 500px;
+    height: 500px;
+
+    top: -180px;
+    left: -180px;
+
+    border-radius: 50%;
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(37, 99, 235, 0.10),
+            transparent 70%
+        );
+
+    pointer-events: none;
+
+    z-index: -2;
+
+    animation:
+        backgroundGlowOne
+        12s
+        ease-in-out
+        infinite;
+}
+
+
+body::after {
+
+    content: "";
+
+    position: fixed;
+
+    width: 550px;
+    height: 550px;
+
+    right: -220px;
+    bottom: -200px;
+
+    border-radius: 50%;
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(124, 58, 237, 0.09),
+            transparent 70%
+        );
+
+    pointer-events: none;
+
+    z-index: -2;
+
+    animation:
+        backgroundGlowTwo
+        15s
+        ease-in-out
+        infinite;
+}
+
+
+@keyframes backgroundGlowOne {
+
+    0%,
+    100% {
+        transform:
+            translate3d(0, 0, 0)
+            scale(1);
+    }
+
+    50% {
+        transform:
+            translate3d(80px, 60px, 0)
+            scale(1.15);
+    }
+}
+
+
+@keyframes backgroundGlowTwo {
+
+    0%,
+    100% {
+        transform:
+            translate3d(0, 0, 0)
+            scale(1);
+    }
+
+    50% {
+        transform:
+            translate3d(-70px, -50px, 0)
+            scale(1.12);
+    }
+}
+
+
+/* =========================================================
+   4. FLOATING BACKGROUND CIRCLES
+========================================================= */
+
+.floating-circle {
+
+    will-change: transform;
+
+    animation:
+        premiumFloat
+        10s
+        ease-in-out
+        infinite;
+}
+
+
+.circle-1 {
+
+    animation-duration: 11s;
+}
+
+
+.circle-2 {
+
+    animation-duration: 14s;
+
+    animation-delay: -3s;
+}
+
+
+.circle-3 {
+
+    animation-duration: 9s;
+
+    animation-delay: -5s;
+}
+
+
+.circle-4 {
+
+    animation-duration: 13s;
+
+    animation-delay: -7s;
+}
+
+
+@keyframes premiumFloat {
+
+    0%,
+    100% {
+
+        transform:
+            translate3d(0, 0, 0)
+            rotate(0deg);
+    }
+
+    25% {
+
+        transform:
+            translate3d(25px, -20px, 0)
+            rotate(4deg);
+    }
+
+    50% {
+
+        transform:
+            translate3d(-15px, -45px, 0)
+            rotate(-3deg);
+    }
+
+    75% {
+
+        transform:
+            translate3d(-30px, -15px, 0)
+            rotate(5deg);
+    }
+}
+
+
+/* =========================================================
+   5. HERO BADGE ANIMATION
+========================================================= */
+
+.hero-badge {
+
+    animation:
+        badgeEntrance
+        0.7s
+        0.15s
+        ease
+        both;
+}
+
+
+@keyframes badgeEntrance {
+
+    from {
+
+        opacity: 0;
+
+        transform:
+            translateY(15px)
+            scale(0.95);
+    }
+
+    to {
+
+        opacity: 1;
+
+        transform:
+            translateY(0)
+            scale(1);
+    }
+}
+
+
+/* =========================================================
+   6. HERO HEADING ANIMATION
+========================================================= */
+
+.hero-content h1 {
+
+    animation:
+        headingEntrance
+        0.9s
+        0.25s
+        ease
+        both;
+}
+
+
+@keyframes headingEntrance {
+
+    from {
+
+        opacity: 0;
+
+        transform:
+            translateY(25px);
+    }
+
+    to {
+
+        opacity: 1;
+
+        transform:
+            translateY(0);
+    }
+}
+
+
+/* =========================================================
+   7. HERO DESCRIPTION
+========================================================= */
+
+.hero-description {
+
+    animation:
+        descriptionEntrance
+        0.8s
+        0.4s
+        ease
+        both;
+}
+
+
+@keyframes descriptionEntrance {
+
+    from {
+
+        opacity: 0;
+
+        transform:
+            translateY(20px);
+    }
+
+    to {
+
+        opacity: 1;
+
+        transform:
+            translateY(0);
+    }
+}
+
+
+/* =========================================================
+   8. HERO BUTTONS
+========================================================= */
+
+.hero-buttons {
+
+    animation:
+        buttonsEntrance
+        0.8s
+        0.5s
+        ease
+        both;
+}
+
+
+@keyframes buttonsEntrance {
+
+    from {
+
+        opacity: 0;
+
+        transform:
+            translateY(20px);
+    }
+
+    to {
+
+        opacity: 1;
+
+        transform:
+            translateY(0);
+    }
+}
+
+
+/* =========================================================
+   9. BUTTON GLOW
+========================================================= */
+
+.btn-primary {
+
+    position: relative;
+
+    overflow: hidden;
+}
+
+
+.btn-primary::before {
+
+    content: "";
+
+    position: absolute;
+
+    top: 0;
+    left: -120%;
+
+    width: 70%;
+    height: 100%;
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            rgba(255, 255, 255, 0.28),
+            transparent
+        );
+
+    transform:
+        skewX(-20deg);
+
+    transition:
+        left
+        0.6s
+        ease;
+}
+
+
+.btn-primary:hover::before {
+
+    left: 140%;
+}
+
+
+/* =========================================================
+   10. HERO TRUST ITEMS
+========================================================= */
+
+.hero-trust {
+
+    animation:
+        trustEntrance
+        0.8s
+        0.65s
+        ease
+        both;
+}
+
+
+@keyframes trustEntrance {
+
+    from {
+
+        opacity: 0;
+
+        transform:
+            translateY(15px);
+    }
+
+    to {
+
+        opacity: 1;
+
+        transform:
+            translateY(0);
+    }
+}
+
+
+/* =========================================================
+   11. HERO CODE CARD
+========================================================= */
+
+.hero-card {
+
+    animation:
+        codeCardEntrance
+        1s
+        0.3s
+        cubic-bezier(
+            0.16,
+            1,
+            0.3,
+            1
+        )
+        both;
+}
+
+
+@keyframes codeCardEntrance {
+
+    from {
+
+        opacity: 0;
+
+        transform:
+            perspective(1000px)
+            rotateY(-15deg)
+            rotateX(7deg)
+            translateX(50px)
+            translateY(20px);
+    }
+
+    to {
+
+        opacity: 1;
+
+        transform:
+            perspective(1000px)
+            rotateY(-4deg)
+            rotateX(2deg)
+            translateX(0)
+            translateY(0);
+    }
+}
+
+
+/* =========================================================
+   12. CODE WINDOW SCANNING EFFECT
+========================================================= */
+
+.code-window {
+
+    position: relative;
+
+    overflow: hidden;
+}
+
+
+.code-window::after {
+
+    content: "";
+
+    position: absolute;
+
+    left: 0;
+    right: 0;
+
+    top: -10%;
+
+    height: 2px;
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            rgba(96, 165, 250, 0.75),
+            transparent
+        );
+
+    box-shadow:
+        0 0 12px
+        rgba(96, 165, 250, 0.35);
+
+    animation:
+        codeScan
+        4s
+        linear
+        infinite;
+}
+
+
+@keyframes codeScan {
+
+    0% {
+        top: -5%;
+        opacity: 0;
+    }
+
+    10% {
+        opacity: 1;
+    }
+
+    90% {
+        opacity: 1;
+    }
+
+    100% {
+        top: 105%;
+        opacity: 0;
+    }
+}
+
+
+/* =========================================================
+   13. CODE LINE ANIMATION
+========================================================= */
+
+.code-line {
+
+    opacity: 0;
+
+    animation:
+        codeLineAppear
+        0.5s
+        ease
+        forwards;
+}
+
+
+.code-line:nth-child(1) {
+    animation-delay: 0.8s;
+}
+
+
+.code-line:nth-child(2) {
+    animation-delay: 0.95s;
+}
+
+
+.code-line:nth-child(3) {
+    animation-delay: 1.1s;
+}
+
+
+.code-line:nth-child(4) {
+    animation-delay: 1.25s;
+}
+
+
+.code-line:nth-child(5) {
+    animation-delay: 1.4s;
+}
+
+
+.code-line:nth-child(6) {
+    animation-delay: 1.55s;
+}
+
+
+.code-line:nth-child(7) {
+    animation-delay: 1.7s;
+}
+
+
+@keyframes codeLineAppear {
+
+    from {
+
+        opacity: 0;
+
+        transform:
+            translateX(-10px);
+    }
+
+    to {
+
+        opacity: 1;
+
+        transform:
+            translateX(0);
+    }
+}
+
+
+/* =========================================================
+   14. CODE RESULT SUCCESS ANIMATION
+========================================================= */
+
+.code-result {
+
+    animation:
+        resultAppear
+        0.7s
+        2s
+        ease
+        both;
+}
+
+
+@keyframes resultAppear {
+
+    from {
+
+        opacity: 0;
+
+        transform:
+            translateY(12px);
+    }
+
+    to {
+
+        opacity: 1;
+
+        transform:
+            translateY(0);
+    }
+}
+
+
+/* =========================================================
+   15. SUCCESS ICON
+========================================================= */
+
+.result-status i {
+
+    animation:
+        successPulse
+        2s
+        ease-in-out
+        infinite;
+}
+
+
+@keyframes successPulse {
+
+    0%,
+    100% {
+
+        transform:
+            scale(1);
+
+        filter:
+            drop-shadow(
+                0 0 0
+                rgba(34, 197, 94, 0)
+            );
+    }
+
+    50% {
+
+        transform:
+            scale(1.2);
+
+        filter:
+            drop-shadow(
+                0 0 8px
+                rgba(34, 197, 94, 0.45)
+            );
+    }
+}
+
+
+/* =========================================================
+   16. FLOATING SECURITY CARDS
+========================================================= */
+
+.floating-card {
+
+    animation:
+        securityFloat
+        4s
+        ease-in-out
+        infinite;
+}
+
+
+.security-floating {
+
+    animation-delay:
+        -1s;
+}
+
+
+.result-floating {
+
+    animation-delay:
+        -2.5s;
+}
+
+
+@keyframes securityFloat {
+
+    0%,
+    100% {
+
+        transform:
+            translateY(0)
+            rotate(0deg);
+    }
+
+    50% {
+
+        transform:
+            translateY(-12px)
+            rotate(1deg);
+    }
+}
+
+
+/* =========================================================
+   17. SECURITY LIVE INDICATOR
+========================================================= */
+
+.live-status i {
+
+    animation:
+        liveIndicator
+        1.4s
+        ease-in-out
+        infinite;
+}
+
+
+@keyframes liveIndicator {
+
+    0% {
+
+        opacity: 1;
+
+        transform:
+            scale(1);
+    }
+
+    50% {
+
+        opacity: 0.35;
+
+        transform:
+            scale(0.7);
+    }
+
+    100% {
+
+        opacity: 1;
+
+        transform:
+            scale(1);
+    }
+}
+
+
+/* =========================================================
+   18. FEATURE CARD ENTRANCE
+========================================================= */
+
+.feature-card {
+
+    animation:
+        featureEntrance
+        0.7s
+        ease
+        both;
+}
+
+
+.feature-card:nth-child(1) {
+    animation-delay: 0.05s;
+}
+
+
+.feature-card:nth-child(2) {
+    animation-delay: 0.12s;
+}
+
+
+.feature-card:nth-child(3) {
+    animation-delay: 0.19s;
+}
+
+
+.feature-card:nth-child(4) {
+    animation-delay: 0.26s;
+}
+
+
+.feature-card:nth-child(5) {
+    animation-delay: 0.33s;
+}
+
+
+.feature-card:nth-child(6) {
+    animation-delay: 0.40s;
+}
+
+
+@keyframes featureEntrance {
+
+    from {
+
+        opacity: 0;
+
+        transform:
+            translateY(30px);
+    }
+
+    to {
+
+        opacity: 1;
+
+        transform:
+            translateY(0);
+    }
+}
+
+
+/* =========================================================
+   19. FEATURE ICON HOVER
+========================================================= */
+
+.feature-icon {
+
+    transition:
+        transform
+        0.35s
+        ease;
+}
+
+
+.feature-card:hover .feature-icon {
+
+    transform:
+        translateY(-4px)
+        rotate(-5deg);
+}
+
+
+/* =========================================================
+   20. WORKFLOW STEP ANIMATION
+========================================================= */
+
+.workflow-step {
+
+    animation:
+        workflowAppear
+        0.8s
+        ease
+        both;
+}
+
+
+.workflow-step:nth-child(1) {
+    animation-delay: 0.1s;
+}
+
+
+.workflow-step:nth-child(3) {
+    animation-delay: 0.2s;
+}
+
+
+.workflow-step:nth-child(5) {
+    animation-delay: 0.3s;
+}
+
+
+.workflow-step:nth-child(7) {
+    animation-delay: 0.4s;
+}
+
+
+.workflow-line {
+
+    animation:
+        lineGrow
+        0.8s
+        ease
+        both;
+}
+
+
+@keyframes workflowAppear {
+
+    from {
+
+        opacity: 0;
+
+        transform:
+            translateY(25px)
+            scale(0.96);
+    }
+
+    to {
+
+        opacity: 1;
+
+        transform:
+            translateY(0)
+            scale(1);
+    }
+}
+
+
+@keyframes lineGrow {
+
+    from {
+        opacity: 0;
+        transform: scaleX(0);
+    }
+
+    to {
+        opacity: 1;
+        transform: scaleX(1);
+    }
+}
+
+
+/* =========================================================
+   21. STEP ICON PULSE
+========================================================= */
+
+.step-icon {
+
+    transition:
+        transform
+        0.35s
+        ease,
+        box-shadow
+        0.35s
+        ease;
+}
+
+
+.workflow-step:hover .step-icon {
+
+    transform:
+        translateY(-6px)
+        scale(1.06);
+
+    box-shadow:
+        0 18px 35px
+        rgba(37, 99, 235, 0.28);
+}
+
+
+/* =========================================================
+   22. SECURITY DASHBOARD ENTRANCE
+========================================================= */
+
+.security-dashboard-card {
+
+    animation:
+        securityDashboard
+        0.9s
+        ease
+        both;
+}
+
+
+@keyframes securityDashboard {
+
+    from {
+
+        opacity: 0;
+
+        transform:
+            translateX(35px)
+            scale(0.97);
+    }
+
+    to {
+
+        opacity: 1;
+
+        transform:
+            translateX(0)
+            scale(1);
+    }
+}
+
+
+/* =========================================================
+   23. MONITOR STATUS ANIMATION
+========================================================= */
+
+.monitor-status {
+
+    opacity: 0;
+
+    animation:
+        statusAppear
+        0.5s
+        ease
+        forwards;
+}
+
+
+.monitor-status:nth-child(2) {
+    animation-delay: 0.3s;
+}
+
+
+.monitor-status:nth-child(3) {
+    animation-delay: 0.45s;
+}
+
+
+.monitor-status:nth-child(4) {
+    animation-delay: 0.6s;
+}
+
+
+.monitor-status:nth-child(5) {
+    animation-delay: 0.75s;
+}
+
+
+@keyframes statusAppear {
+
+    from {
+
+        opacity: 0;
+
+        transform:
+            translateX(12px);
+    }
+
+    to {
+
+        opacity: 1;
+
+        transform:
+            translateX(0);
+    }
+}
+
+
+/* =========================================================
+   24. ANALYTICS CARD ANIMATION
+========================================================= */
+
+.analytics-card {
+
+    animation:
+        analyticsAppear
+        0.7s
+        ease
+        both;
+}
+
+
+.analytics-card:nth-child(1) {
+    animation-delay: 0.1s;
+}
+
+
+.analytics-card:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+
+.analytics-card:nth-child(3) {
+    animation-delay: 0.3s;
+}
+
+
+.analytics-card:nth-child(4) {
+    animation-delay: 0.4s;
+}
+
+
+.analytics-card:nth-child(5) {
+    animation-delay: 0.5s;
+}
+
+
+@keyframes analyticsAppear {
+
+    from {
+
+        opacity: 0;
+
+        transform:
+            translateY(25px);
+    }
+
+    to {
+
+        opacity: 1;
+
+        transform:
+            translateY(0);
+    }
+}
+
+
+/* =========================================================
+   25. ANALYTICS NUMBER GLOW
+========================================================= */
+
+.analytics-header h3,
+.analytics-card > h3 {
+
+    transition:
+        transform
+        0.3s
+        ease;
+}
+
+
+.analytics-card:hover h3 {
+
+    transform:
+        scale(1.04);
+}
+
+
+/* =========================================================
+   26. CHART BAR ANIMATION
+========================================================= */
+
+.chart-bar {
+
+    transform-origin:
+        bottom;
+
+    animation:
+        chartBarGrow
+        1.2s
+        cubic-bezier(
+            0.16,
+            1,
+            0.3,
+            1
+        )
+        both;
+}
+
+
+.chart-bar:nth-child(1) {
+    animation-delay: 0.1s;
+}
+
+
+.chart-bar:nth-child(2) {
+    animation-delay: 0.18s;
+}
+
+
+.chart-bar:nth-child(3) {
+    animation-delay: 0.26s;
+}
+
+
+.chart-bar:nth-child(4) {
+    animation-delay: 0.34s;
+}
+
+
+.chart-bar:nth-child(5) {
+    animation-delay: 0.42s;
+}
+
+
+.chart-bar:nth-child(6) {
+    animation-delay: 0.50s;
+}
+
+
+.chart-bar:nth-child(7) {
+    animation-delay: 0.58s;
+}
+
+
+@keyframes chartBarGrow {
+
+    from {
+
+        opacity: 0;
+
+        transform:
+            scaleY(0);
+    }
+
+    to {
+
+        opacity: 1;
+
+        transform:
+            scaleY(1);
+    }
+}
+
+
+/* =========================================================
+   27. ADVANCED FEATURE ANIMATION
+========================================================= */
+
+.advanced-card {
+
+    animation:
+        advancedAppear
+        0.7s
+        ease
+        both;
+}
+
+
+.advanced-card:nth-child(1) {
+    animation-delay: 0.05s;
+}
+
+
+.advanced-card:nth-child(2) {
+    animation-delay: 0.12s;
+}
+
+
+.advanced-card:nth-child(3) {
+    animation-delay: 0.19s;
+}
+
+
+.advanced-card:nth-child(4) {
+    animation-delay: 0.26s;
+}
+
+
+@keyframes advancedAppear {
+
+    from {
+
+        opacity: 0;
+
+        transform:
+            translateY(25px)
+            scale(0.97);
+    }
+
+    to {
+
+        opacity: 1;
+
+        transform:
+            translateY(0)
+            scale(1);
+    }
+}
+
+
+/* =========================================================
+   28. ADVANCED ICON ROTATION
+========================================================= */
+
+.advanced-card > i {
+
+    transition:
+        transform
+        0.35s
+        ease;
+}
+
+
+.advanced-card:hover > i {
+
+    transform:
+        rotate(8deg)
+        scale(1.08);
+}
+
+
+/* =========================================================
+   29. ABOUT STAT ANIMATION
+========================================================= */
+
+.about-stat {
+
+    animation:
+        statAppear
+        0.7s
+        ease
+        both;
+}
+
+
+.about-stat:nth-child(1) {
+    animation-delay: 0.1s;
+}
+
+
+.about-stat:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+
+.about-stat:nth-child(3) {
+    animation-delay: 0.3s;
+}
+
+
+.about-stat:nth-child(4) {
+    animation-delay: 0.4s;
+}
+
+
+@keyframes statAppear {
+
+    from {
+
+        opacity: 0;
+
+        transform:
+            translateY(20px);
+    }
+
+    to {
+
+        opacity: 1;
+
+        transform:
+            translateY(0);
+    }
+}
+
+
+/* =========================================================
+   30. CTA GLOW
+========================================================= */
+
+.cta-card {
+
+    animation:
+        ctaEntrance
+        0.8s
+        ease
+        both;
+}
+
+
+@keyframes ctaEntrance {
+
+    from {
+
+        opacity: 0;
+
+        transform:
+            translateY(25px)
+            scale(0.98);
+    }
+
+    to {
+
+        opacity: 1;
+
+        transform:
+            translateY(0)
+            scale(1);
+    }
+}
+
+
+.cta-card::after {
+
+    content: "";
+
+    position: absolute;
+
+    width: 180px;
+    height: 180px;
+
+    left: -70px;
+    bottom: -100px;
+
+    border-radius: 50%;
+
+    background:
+        rgba(124, 58, 237, 0.15);
+
+    filter: blur(15px);
+
+    animation:
+        ctaGlow
+        8s
+        ease-in-out
+        infinite;
+}
+
+
+@keyframes ctaGlow {
+
+    0%,
+    100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.35);
+    }
+}
+
+
+/* =========================================================
+   31. LOGO HOVER
+========================================================= */
+
+.logo-icon {
+
+    transition:
+        transform
+        0.35s
+        ease,
+        box-shadow
+        0.35s
+        ease;
+}
+
+
+.logo:hover .logo-icon {
+
+    transform:
+        rotate(-7deg)
+        scale(1.06);
+
+    box-shadow:
+        0 12px 28px
+        rgba(37, 99, 235, 0.30);
+}
+
+
+/* =========================================================
+   32. NAVIGATION ANIMATION
+========================================================= */
+
+.nav-link {
+
+    transition:
+        color
+        0.25s
+        ease,
+        transform
+        0.25s
+        ease;
+}
+
+
+.nav-link:hover {
+
+    transform:
+        translateY(-1px);
+}
+
+
+/* =========================================================
+   33. HEADER SCROLL EFFECT
+========================================================= */
+
+.main-header {
+
+    transition:
+        background
+        0.3s
+        ease,
+        box-shadow
+        0.3s
+        ease,
+        transform
+        0.3s
+        ease;
+}
+
+
+/* =========================================================
+   34. MOBILE MENU ANIMATION
+========================================================= */
+
+.main-nav {
+
+    transform-origin:
+        top center;
+}
+
+
+.main-nav.show {
+
+    animation:
+        mobileMenuOpen
+        0.35s
+        ease
+        both;
+}
+
+
+@keyframes mobileMenuOpen {
+
+    from {
+
+        opacity: 0;
+
+        transform:
+            translateY(-10px)
+            scale(0.98);
+    }
+
+    to {
+
+        opacity: 1;
+
+        transform:
+            translateY(0)
+            scale(1);
+    }
+}
+
+
+/* =========================================================
+   35. MOBILE MENU BUTTON
+========================================================= */
+
+.mobile-menu-btn {
+
+    transition:
+        transform
+        0.25s
+        ease,
+        background
+        0.25s
+        ease;
+}
+
+
+.mobile-menu-btn:hover {
+
+    transform:
+        scale(1.05);
+
+    background:
+        #f8fafc;
+}
+
+
+/* =========================================================
+   36. HOVER LIFT UTILITY
+========================================================= */
+
+.hover-lift {
+
+    transition:
+        transform
+        0.3s
+        ease,
+        box-shadow
+        0.3s
+        ease;
+}
+
+
+.hover-lift:hover {
+
+    transform:
+        translateY(-6px);
+
+    box-shadow:
+        0 20px 45px
+        rgba(15, 23, 42, 0.12);
+}
+
+
+/* =========================================================
+   37. GLOW EFFECT
+========================================================= */
+
+.glow-effect {
+
+    animation:
+        softGlow
+        3s
+        ease-in-out
+        infinite;
+}
+
+
+@keyframes softGlow {
+
+    0%,
+    100% {
+
+        box-shadow:
+            0 0 0
+            rgba(37, 99, 235, 0);
+    }
+
+    50% {
+
+        box-shadow:
+            0 0 30px
+            rgba(37, 99, 235, 0.15);
+    }
+}
+
+
+/* =========================================================
+   38. LOADING SHIMMER
+========================================================= */
+
+.shimmer {
+
+    position: relative;
+
+    overflow: hidden;
+}
+
+
+.shimmer::after {
+
+    content: "";
+
+    position: absolute;
+
+    inset: 0;
+
+    transform:
+        translateX(-100%);
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            rgba(255, 255, 255, 0.35),
+            transparent
+        );
+
+    animation:
+        shimmerMove
+        2.2s
+        infinite;
+}
+
+
+@keyframes shimmerMove {
+
+    100% {
+
+        transform:
+            translateX(100%);
+    }
+}
+
+
+/* =========================================================
+   39. SCROLL REVEAL SUPPORT
+========================================================= */
+
+.reveal {
+
+    opacity: 0;
+
+    transform:
+        translateY(35px);
+
+    transition:
+        opacity
+        0.8s
+        ease,
+        transform
+        0.8s
+        ease;
+}
+
+
+.reveal.active {
+
+    opacity: 1;
+
+    transform:
+        translateY(0);
+}
+
+
+.reveal-left {
+
+    opacity: 0;
+
+    transform:
+        translateX(-40px);
+
+    transition:
+        opacity
+        0.8s
+        ease,
+        transform
+        0.8s
+        ease;
+}
+
+
+.reveal-left.active {
+
+    opacity: 1;
+
+    transform:
+        translateX(0);
+}
+
+
+.reveal-right {
+
+    opacity: 0;
+
+    transform:
+        translateX(40px);
+
+    transition:
+        opacity
+        0.8s
+        ease,
+        transform
+        0.8s
+        ease;
+}
+
+
+.reveal-right.active {
+
+    opacity: 1;
+
+    transform:
+        translateX(0);
+}
+
+
+/* =========================================================
+   40. STAGGER ANIMATIONS
+========================================================= */
+
+.stagger > * {
+
+    opacity: 0;
+
+    transform:
+        translateY(20px);
+}
+
+
+.stagger.active > * {
+
+    animation:
+        staggerItem
+        0.6s
+        ease
+        forwards;
+}
+
+
+.stagger.active > *:nth-child(1) {
+    animation-delay: 0.05s;
+}
+
+
+.stagger.active > *:nth-child(2) {
+    animation-delay: 0.12s;
+}
+
+
+.stagger.active > *:nth-child(3) {
+    animation-delay: 0.19s;
+}
+
+
+.stagger.active > *:nth-child(4) {
+    animation-delay: 0.26s;
+}
+
+
+.stagger.active > *:nth-child(5) {
+    animation-delay: 0.33s;
+}
+
+
+.stagger.active > *:nth-child(6) {
+    animation-delay: 0.40s;
+}
+
+
+@keyframes staggerItem {
+
+    to {
+
+        opacity: 1;
+
+        transform:
+            translateY(0);
+    }
+}
+
+
+/* =========================================================
+   41. SECURITY SCAN LINE
+========================================================= */
+
+.security-dashboard-card {
+
+    position: relative;
+
+    overflow: hidden;
+}
+
+
+.security-dashboard-card::before {
+
+    content: "";
+
+    position: absolute;
+
+    left: 0;
+    right: 0;
+
+    top: -20%;
+
+    height: 1px;
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            rgba(37, 99, 235, 0.55),
+            transparent
+        );
+
+    box-shadow:
+        0 0 15px
+        rgba(37, 99, 235, 0.25);
+
+    animation:
+        securityScan
+        5s
+        linear
+        infinite;
+}
+
+
+@keyframes securityScan {
+
+    0% {
+
+        top: -10%;
+
+        opacity: 0;
+    }
+
+    10% {
+
+        opacity: 1;
+    }
+
+    90% {
+
+        opacity: 1;
+    }
+
+    100% {
+
+        top: 110%;
+
+        opacity: 0;
+    }
+}
+
+
+/* =========================================================
+   42. ACCESSIBILITY
+========================================================= */
+
+*:focus-visible {
+
+    outline:
+        3px solid
+        rgba(37, 99, 235, 0.25);
+
+    outline-offset: 3px;
+}
+
+
+/* =========================================================
+   43. REDUCED MOTION
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+    *,
+    *::before,
+    *::after {
+
+        animation-duration:
+            0.01ms !important;
+
+        animation-iteration-count:
+            1 !important;
+
+        scroll-behavior:
+            auto !important;
+
+        transition-duration:
+            0.01ms !important;
+    }
+
+}
+.btn {
+    position: relative;
+    overflow: hidden;
+}
+
+.button-ripple {
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+    background: rgba(255, 255, 255, 0.35);
+    transform: scale(0);
+    animation: buttonRipple 0.65s ease-out;
+}
+
+@keyframes buttonRipple {
+    to {
+        transform: scale(2.5);
+        opacity: 0;
+    }
+}
