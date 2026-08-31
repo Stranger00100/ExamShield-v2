@@ -2,13 +2,14 @@
 session_start();
 require_once __DIR__ . '/../config/database.php';
 
-// Authentication Check
+// Teacher Authentication Check
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'teacher') {
     header("Location: ../login.php");
     exit();
 }
 
-$exam_id = (int)($_GET['exam_id'] ?? 0);
+// Accept both exam_id and id parameters
+$exam_id = (int)($_GET['exam_id'] ?? $_GET['id'] ?? 0);
 
 if ($exam_id <= 0) {
     header("Location: dashboard.php");
@@ -16,7 +17,7 @@ if ($exam_id <= 0) {
 }
 
 // Fetch Exam Info
-$stmt_exam = $conn->prepare("SELECT title, subject, total_marks, room_code FROM exams WHERE id = ? LIMIT 1");
+$stmt_exam = $conn->prepare("SELECT id, title, subject, total_marks, room_code FROM exams WHERE id = ? LIMIT 1");
 $stmt_exam->bind_param("i", $exam_id);
 $stmt_exam->execute();
 $res_exam = $stmt_exam->get_result();
@@ -24,27 +25,30 @@ $exam = $res_exam ? $res_exam->fetch_assoc() : null;
 $stmt_exam->close();
 
 if (!$exam) {
-    echo "Exam not found.";
+    echo "<div style='font-family:sans-serif; padding:40px; text-align:center;'>";
+    echo "<h2>Exam #{$exam_id} not found.</h2>";
+    echo "<a href='dashboard.php' style='color:#2563eb;'>Return to Dashboard</a>";
+    echo "</div>";
     exit();
 }
 
-// Check columns in users table to prevent Unknown column errors
-$user_col_name = 'u.email';
+// Dynamically check name column
+$name_col = 'u.email';
 $chk = $conn->query("SHOW COLUMNS FROM users LIKE 'name'");
 if ($chk && $chk->num_rows > 0) {
-    $user_col_name = 'u.name';
+    $name_col = 'u.name';
 } else {
-    $chk_user = $conn->query("SHOW COLUMNS FROM users LIKE 'username'");
-    if ($chk_user && $chk_user->num_rows > 0) {
-        $user_col_name = 'u.username';
+    $chk_u = $conn->query("SHOW COLUMNS FROM users LIKE 'username'");
+    if ($chk_u && $chk_u->num_rows > 0) {
+        $name_col = 'u.username';
     }
 }
 
-// Fetch submissions
-$query = "
+// Fetch all student attempts for this exam
+$stmt_sub = $conn->prepare("
     SELECT 
         se.id AS student_exam_id,
-        {$user_col_name} AS student_name,
+        {$name_col} AS student_name,
         u.email AS student_email,
         se.status,
         se.started_at,
@@ -54,10 +58,8 @@ $query = "
     FROM student_exams se
     INNER JOIN users u ON se.student_id = u.id
     WHERE se.exam_id = ?
-    ORDER BY se.started_at DESC
-";
-
-$stmt_sub = $conn->prepare($query);
+    ORDER BY se.id DESC
+");
 $stmt_sub->bind_param("i", $exam_id);
 $stmt_sub->execute();
 $res_sub = $stmt_sub->get_result();
@@ -102,14 +104,16 @@ $stmt_sub->close();
         
         table { width: 100%; border-collapse: collapse; text-align: left; }
         th { background: #f8fafc; color: var(--text-muted); font-size: 0.8rem; text-transform: uppercase; font-weight: 600; padding: 12px 16px; border-bottom: 1px solid var(--border-color); }
-        td { padding: 16px; border-bottom: 1px solid var(--border-color); font-size: 0.9rem; }
+        td { padding: 16px; border-bottom: 1px solid var(--border-color); font-size: 0.9rem; vertical-align: middle; }
         
         .badge { padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; }
         .badge-joined { background: #f1f5f9; color: #475569; }
         .badge-started { background: #fef3c7; color: #b45309; }
         .badge-submitted { background: #ecfdf5; color: #059669; }
 
-        .btn { padding: 8px 16px; border-radius: 8px; font-size: 0.85rem; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; }
+        .btn { padding: 8px 14px; border-radius: 8px; font-size: 0.85rem; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; }
+        .btn-primary { background: var(--primary-blue); color: #fff; border: none; }
+        .btn-primary:hover { background: #1d4ed8; }
         .btn-outline { border: 1px solid var(--border-color); color: var(--text-dark); }
         .btn-outline:hover { background: #f1f5f9; }
     </style>
@@ -125,7 +129,7 @@ $stmt_sub->close();
         </div>
         <ul class="sidebar-nav">
             <li><a href="dashboard.php"><i class="fa-solid fa-shapes"></i> Dashboard</a></li>
-            <li class="active"><a href="manage_exam.php?id=<?= $exam_id ?>"><i class="fa-solid fa-file-circle-plus"></i> Exams</a></li>
+            <li class="active"><a href="dashboard.php"><i class="fa-solid fa-file-circle-plus"></i> Exams</a></li>
             <li><a href="reports.php"><i class="fa-solid fa-chart-pie"></i> Reports</a></li>
             <li><a href="profile.php"><i class="fa-solid fa-user"></i> Profile</a></li>
         </ul>
@@ -154,15 +158,16 @@ $stmt_sub->close();
                     <thead>
                         <tr>
                             <th>Student</th>
-                            <th>Started At</th>
                             <th>Status</th>
+                            <th>Submitted At</th>
                             <th>Score</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
                         <?php if (empty($submissions)): ?>
                             <tr>
-                                <td colspan="4" style="text-align: center; padding: 40px; color: #64748b;">
+                                <td colspan="5" style="text-align: center; padding: 40px; color: #64748b;">
                                     No students have joined this exam session yet.
                                 </td>
                             </tr>
@@ -173,14 +178,19 @@ $stmt_sub->close();
                                         <strong><?= htmlspecialchars($sub['student_name']) ?></strong><br>
                                         <small style="color: #64748b;"><?= htmlspecialchars($sub['student_email']) ?></small>
                                     </td>
-                                    <td><?= !empty($sub['started_at']) ? date('h:i A, M d', strtotime($sub['started_at'])) : '—' ?></td>
                                     <td>
                                         <span class="badge badge-<?= htmlspecialchars($sub['status']) ?>">
                                             <?= ucfirst(htmlspecialchars($sub['status'])) ?>
                                         </span>
                                     </td>
+                                    <td><?= !empty($sub['submitted_at']) ? date('h:i A, M d', strtotime($sub['submitted_at'])) : 'In Progress' ?></td>
                                     <td>
-                                        <?= $sub['final_score'] !== null ? htmlspecialchars($sub['final_score']) . ' / ' . (int)$exam['total_marks'] : 'Pending' ?>
+                                        <strong><?= $sub['final_score'] !== null ? htmlspecialchars($sub['final_score']) . ' / ' . (int)$exam['total_marks'] : 'Pending' ?></strong>
+                                    </td>
+                                    <td>
+                                        <a href="view_submission.php?student_exam_id=<?= (int)$sub['student_exam_id'] ?>" class="btn btn-primary">
+                                            <i class="fa-solid fa-code"></i> View Code
+                                        </a>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>

@@ -26,21 +26,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->close();
 
         if (!$exam) {
-            $error = "Invalid exam room code or the exam is not currently available.";
+            $error = "Invalid room code or the exam is not currently active.";
         } else {
             $exam_id = (int)$exam['id'];
 
-            // 2. Check if student already has a session record
-            $stmt_check = $conn->prepare("SELECT id, status FROM student_exams WHERE student_id = ? AND exam_id = ? LIMIT 1");
-            $stmt_check->bind_param("ii", $student_id, $exam_id);
-            $stmt_check->execute();
-            $res_check = $stmt_check->get_result();
-            $attempt = $res_check ? $res_check->fetch_assoc() : null;
-            $stmt_check->close();
+            // 2. Strict Check: If attempt is already submitted, permanently lock access
+            $stmt_chk = $conn->prepare("SELECT id, status FROM student_exams WHERE student_id = ? AND exam_id = ? LIMIT 1");
+            $stmt_chk->bind_param("ii", $student_id, $exam_id);
+            $stmt_chk->execute();
+            $res_chk = $stmt_chk->get_result();
+            $attempt = $res_chk ? $res_chk->fetch_assoc() : null;
+            $stmt_chk->close();
 
             if ($attempt) {
                 if ($attempt['status'] === 'submitted') {
-                    $error = "You have already completed this exam.";
+                    $error = "You have already completed and submitted this examination. Re-entry is prohibited.";
                 } elseif ($attempt['status'] === 'started') {
                     header("Location: exam.php?exam_id=" . $exam_id);
                     exit();
@@ -49,16 +49,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     exit();
                 }
             } else {
-                // 3. Register fresh joined status
+                // Register fresh joined attempt
                 $stmt_reg = $conn->prepare("INSERT INTO student_exams (student_id, exam_id, status) VALUES (?, ?, 'joined')");
                 $stmt_reg->bind_param("ii", $student_id, $exam_id);
-                
                 if ($stmt_reg->execute()) {
                     $stmt_reg->close();
                     header("Location: instructions.php?exam_id=" . $exam_id);
                     exit();
                 } else {
-                    $error = "Unable to join the exam. Please try again.";
+                    $error = "Unable to register your exam session. Please try again.";
                     $stmt_reg->close();
                 }
             }
@@ -77,10 +76,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link rel="stylesheet" href="../assets/css/student/student_joinexam.css">
 </head>
 <body>
-    <!-- Student Sidebar Navigation -->
     <?php include __DIR__ . '/includes/student_sidebar.php'; ?>
 
-    <!-- Main Content Wrapper -->
     <div class="main-wrapper">
         <?php include __DIR__ . '/includes/student_header.php'; ?>
 

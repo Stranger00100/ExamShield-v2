@@ -10,8 +10,20 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'student') {
 
 $student_id = (int)$_SESSION['user_id'];
 
-// Fetch user profile securely using MySQLi prepared statement
-$stmt = $conn->prepare("SELECT id, name, email, role, created_at FROM users WHERE id = ? LIMIT 1");
+// Detect name column dynamically to avoid query crashes
+$name_col = 'email';
+$chk = $conn->query("SHOW COLUMNS FROM users LIKE 'name'");
+if ($chk && $chk->num_rows > 0) {
+    $name_col = 'name';
+} else {
+    $chk_user = $conn->query("SHOW COLUMNS FROM users LIKE 'username'");
+    if ($chk_user && $chk_user->num_rows > 0) {
+        $name_col = 'username';
+    }
+}
+
+// Fetch user profile securely
+$stmt = $conn->prepare("SELECT id, {$name_col} AS display_name, email, role, created_at FROM users WHERE id = ? LIMIT 1");
 $stmt->bind_param("i", $student_id);
 $stmt->execute();
 $res = $stmt->get_result();
@@ -23,7 +35,8 @@ if (!$user) {
     exit();
 }
 
-$displayName = $user['name'] ?? 'Student';
+// Safe name resolution
+$displayName = !empty($user['display_name']) ? $user['display_name'] : ($_SESSION['name'] ?? 'Student');
 $initial = strtoupper(substr($displayName, 0, 1));
 ?>
 <!DOCTYPE html>
@@ -60,7 +73,7 @@ $initial = strtoupper(substr($displayName, 0, 1));
                     <div class="profile-details-grid">
                         <div class="profile-field-group">
                             <label>Full Name</label>
-                            <span class="field-value"><?= htmlspecialchars($user['name']) ?></span>
+                            <span class="field-value"><?= htmlspecialchars($displayName) ?></span>
                         </div>
 
                         <div class="profile-field-group">
@@ -70,14 +83,14 @@ $initial = strtoupper(substr($displayName, 0, 1));
 
                         <div class="profile-field-group">
                             <label>Registered Institutional Email</label>
-                            <span class="field-value"><?= htmlspecialchars($user['email']) ?></span>
+                            <span class="field-value"><?= htmlspecialchars($user['email'] ?? '') ?></span>
                         </div>
 
                         <div class="profile-field-group">
                             <label>Account Role</label>
                             <div class="role-badge-pill">
                                 <i class="fa-solid fa-user-graduate"></i>
-                                <span><?= ucfirst(htmlspecialchars($user['role'])) ?></span>
+                                <span><?= ucfirst(htmlspecialchars($user['role'] ?? 'student')) ?></span>
                             </div>
                         </div>
 

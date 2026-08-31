@@ -1,41 +1,32 @@
 <?php
 session_start();
 require_once __DIR__ . '/../config/database.php';
-require_once __DIR__ . '/../compiler/evaluator.php';
 
-// Student Authentication Gatekeeper
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'student') {
     header("Location: ../login.php");
     exit();
 }
 
 $student_id = (int)$_SESSION['user_id'];
-$exam_id = 0;
-$part_a_code = '';
-$part_b_code = '';
-$language = 'c';
+$raw_input = file_get_contents('php://input');
+$payload = json_decode($raw_input, true);
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $payload = json_decode(file_get_contents('php://input'), true);
-    $exam_id = (int)($payload['exam_id'] ?? 0);
-    $part_a_code = trim($payload['part_a_code'] ?? '');
-    $part_b_code = trim($payload['part_b_code'] ?? '');
-    $language = strtolower(trim($payload['language'] ?? 'c'));
-} else {
-    $exam_id = (int)($_GET['exam_id'] ?? 0);
-}
+$exam_id = (int)($payload['exam_id'] ?? $_GET['exam_id'] ?? 0);
+$part_a_code = $payload['part_a_code'] ?? '';
+$part_b_code = $payload['part_b_code'] ?? '';
+$language = strtolower(trim($payload['language'] ?? 'c'));
 
 if ($exam_id <= 0) {
     header("Location: dashboard.php");
     exit();
 }
 
-// 1. Fetch Active Student Exam Attempt Record
+// 1. Fetch Student Exam Record
 $stmt = $conn->prepare("
-    SELECT id, part_a_question_id, part_b_question_id, status, marks_deducted 
+    SELECT id, part_a_question_id, part_b_question_id 
     FROM student_exams 
-    WHERE exam_id = ? AND student_id = ? AND status != 'submitted' 
-    LIMIT 1
+    WHERE exam_id = ? AND student_id = ? 
+    ORDER BY id DESC LIMIT 1
 ");
 $stmt->bind_param("ii", $exam_id, $student_id);
 $stmt->execute();
@@ -45,52 +36,28 @@ $stmt->close();
 
 if ($attempt) {
     $student_exam_id = (int)$attempt['id'];
-    $part_a_qid = (int)$attempt['part_a_question_id'];
-    $part_b_qid = (int)$attempt['part_b_question_id'];
-    $penalty = (int)$attempt['marks_deducted'];
+    $part_a_qid = !empty($attempt['part_a_question_id']) ? (int)$attempt['part_a_question_id'] : null;
+    $part_b_qid = !empty($attempt['part_b_question_id']) ? (int)$attempt['part_b_question_id'] : null;
 
-    $score_a = 0.00;
-    $score_b = 0.00;
+    // Delete any previous temporary records for this attempt
+    $conn->query("DELETE FROM student_submissions WHERE student_exam_id = {$student_exam_id}");
 
-    // 2. Evaluate Part A
-    if (!empty($part_a_code) && $part_a_qid > 0) {
-        $eval_a = evaluateStudentCode($conn, $part_a_qid, $part_a_code, $language);
-        $score_a = (float)$eval_a['score'];
+    // 2. Insert Part A Code
+    $stmt_a = $conn->prepare("INSERT INTO student_submissions (student_exam_id, question_id, submitted_code, language, score) VALUES (?, ?, ?, ?, 0.00)");
+    $stmt_a->bind_param("iiss", $student_exam_id, $part_a_qid, $part_a_code, $language);
+    $stmt_a->execute();
+    $stmt_a->close();
 
-        $stmt_sub_a = $conn->prepare("
-            INSERT INTO student_submissions (student_exam_id, question_id, submitted_code, language, score) 
-            VALUES (?, ?, ?, ?, ?)
-        ");
-        $stmt_sub_a->bind_param("iissd", $student_exam_id, $part_a_qid, $part_a_code, $language, $score_a);
-        $stmt_sub_a->execute();
-        $stmt_sub_a->close();
-    }
+    // 3. Insert Part B Code
+    $stmt_b = $conn->prepare("INSERT INTO student_submissions (student_exam_id, question_id, submitted_code, language, score) VALUES (?, ?, ?, ?, 0.00)");
+    $stmt_b->bind_param("iiss", $student_exam_id, $part_b_qid, $part_b_code, $language);
+    $stmt_b->execute();
+    $stmt_b->close();
 
-    // 3. Evaluate Part B
-    if (!empty($part_b_code) && $part_b_qid > 0) {
-        $eval_b = evaluateStudentCode($conn, $part_b_qid, $part_b_code, $language);
-        $score_b = (float)$eval_b['score'];
-
-        $stmt_sub_b = $conn->prepare("
-            INSERT INTO student_submissions (student_exam_id, question_id, submitted_code, language, score) 
-            VALUES (?, ?, ?, ?, ?)
-        ");
-        $stmt_sub_b->bind_param("iissd", $student_exam_id, $part_b_qid, $part_b_code, $language, $score_b);
-        $stmt_sub_b->execute();
-        $stmt_sub_b->close();
-    }
-
-    // 4. Compute Final Score
-    $total_calculated_score = max(0.00, ($score_a + $score_b) - $penalty);
-
-    // 5. Mark Exam as Submitted and Save Final Score
+    // 4. Mark Exam as Submitted
     $now = date('Y-m-d H:i:s');
-    $stmt_close = $conn->prepare("
-        UPDATE student_exams 
-        SET status = 'submitted', submitted_at = ?, final_score = ? 
-        WHERE id = ?
-    ");
-    $stmt_close->bind_param("sdi", $now, $total_calculated_score, $student_exam_id);
+    $stmt_close = $conn->prepare("UPDATE student_exams SET status = 'submitted', submitted_at = ?, final_score = 0.00 WHERE id = ?");
+    $stmt_close->bind_param("si", $now, $student_exam_id);
     $stmt_close->execute();
     $stmt_close->close();
 }

@@ -268,7 +268,7 @@ if ($q_b_id > 0) {
         setInterval(formatTimer, 1000);
         formatTimer();
 
-        // 2. Templates & Editor Buffers
+ // 2. Templates & Editor Buffers
         const templates = {
             'c': "#include <stdio.h>\n\nint main() {\n    printf(\"Hello World\\n\");\n    return 0;\n}",
             'cpp': "#include <iostream>\nusing namespace std;\n\nint main() {\n    cout << \"Hello World\" << endl;\n    return 0;\n}",
@@ -276,7 +276,7 @@ if ($q_b_id > 0) {
         };
 
         const langSelector = document.getElementById('languageSelector');
-        let currentLang = langSelector.value;
+        let currentLang = langSelector ? langSelector.value : 'c';
 
         let codeBuffers = {
             partA: { c: templates.c, cpp: templates.cpp, python: templates.python },
@@ -284,47 +284,79 @@ if ($q_b_id > 0) {
         };
         let activePart = 'partA';
         let editorInstance = null;
+        
+require.config({ paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.38.0/min/vs' } });
+require(['vs/editor/editor.main'], function() {
+    editorInstance = monaco.editor.create(document.getElementById('monacoEditorWorkspace'), {
+        value: codeBuffers[activePart][currentLang],
+        language: currentLang,
+        theme: 'vs-dark',
+        automaticLayout: true,
+        fontSize: 14,
+        minimap: { enabled: false },
+        contextmenu: false // Disables right-click context menu in Monaco
+    });
 
-        require.config({ paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.38.0/min/vs' } });
-        require(['vs/editor/editor.main'], function() {
-            editorInstance = monaco.editor.create(document.getElementById('monacoEditorWorkspace'), {
-                value: codeBuffers[activePart][currentLang],
-                language: currentLang,
-                theme: 'vs-dark',
-                automaticLayout: true,
-                fontSize: 14,
-                minimap: { enabled: false }
+    // Block Monaco Copy (Ctrl+C / Cmd+C)
+    editorInstance.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyC, function() {
+        // Suppress copying from editor
+    });
+
+    // Block Monaco Paste (Ctrl+V / Cmd+V) and log proctoring event
+    editorInstance.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyV, function() {
+        if (typeof STUDENT_EXAM_ID !== 'undefined' && STUDENT_EXAM_ID) {
+            fetch('../api/activity_log.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    student_exam_id: STUDENT_EXAM_ID,
+                    event_type: 'paste_attempt',
+                    details: 'Intercepted Monaco keyboard paste attempt.'
+                })
+            }).catch(() => {});
+        }
+    });
+});
+
+      // 3. Dynamic Language Switcher
+        if (langSelector) {
+            langSelector.addEventListener('change', (e) => {
+                if (editorInstance) {
+                    // 1. Save current editor state to the active buffer
+                    codeBuffers[activePart][currentLang] = editorInstance.getValue();
+                    
+                    // 2. Switch language and restore corresponding buffer
+                    currentLang = e.target.value;
+                    monaco.editor.setModelLanguage(editorInstance.getModel(), currentLang === 'cpp' ? 'cpp' : currentLang);
+                    editorInstance.setValue(codeBuffers[activePart][currentLang]);
+                }
             });
-        });
-
-        // 3. Dynamic Language Switcher
-        langSelector.addEventListener('change', (e) => {
-            if (editorInstance) {
-                // Save old code for this language
-                codeBuffers[activePart][currentLang] = editorInstance.getValue();
-                
-                currentLang = e.target.value;
-                monaco.editor.setModelLanguage(editorInstance.getModel(), currentLang);
-                editorInstance.setValue(codeBuffers[activePart][currentLang]);
-            }
-        });
+        }
 
         // 4. Tab Switching between Part A and Part B
         document.querySelectorAll('.part-tab-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
+                const targetBtn = e.currentTarget;
+                const targetPane = targetBtn.getAttribute('data-target');
+                const nextPart = (targetPane === 'panePartA') ? 'partA' : 'partB';
+
+                if (activePart === nextPart) return;
+
+                // 1. Save outgoing part code from editor
                 if (editorInstance) {
                     codeBuffers[activePart][currentLang] = editorInstance.getValue();
                 }
 
+                // 2. Switch question DOM panes
                 document.querySelectorAll('.part-tab-btn').forEach(b => b.classList.remove('active'));
-                const targetBtn = e.currentTarget;
                 targetBtn.classList.add('active');
 
-                const targetPane = targetBtn.getAttribute('data-target');
                 document.querySelectorAll('.question-display-area').forEach(pane => pane.style.display = 'none');
-                document.getElementById(targetPane).style.display = 'block';
+                const targetElement = document.getElementById(targetPane);
+                if (targetElement) targetElement.style.display = 'block';
 
-                activePart = (targetPane === 'panePartA') ? 'partA' : 'partB';
+                // 3. Switch active part and set incoming buffer
+                activePart = nextPart;
                 if (editorInstance) {
                     editorInstance.setValue(codeBuffers[activePart][currentLang]);
                 }
@@ -414,6 +446,7 @@ document.getElementById('btnFinishExam').addEventListener('click', () => {
             window.location.href = 'results.php';
         });
     }
+    
 });
 // Question Set Swap Handler with Penalty Warning & Server Restriction
 document.getElementById('btnSwapQuestionSet').addEventListener('click', () => {
@@ -450,12 +483,13 @@ document.getElementById('btnSwapQuestionSet').addEventListener('click', () => {
     })
     .catch(() => {
         alert("Connection error: Unable to contact server.");
-        swapBtn.disabled = false;
-        swapBtn.innerHTML = '<i class="fa-solid fa-arrows-rotate"></i> Change Question Set';
+      swapBtn.disabled = false;
+            swapBtn.innerHTML = '<i class="fa-solid fa-arrows-rotate"></i> Change Question Set';
+        });
     });
-});
-    </script>
-<!-- Proctoring Telemetry Tracker -->
+</script>
+
+    <!-- Pass Attempt ID to AntiCheat Proctoring Script -->
     <script>
         const STUDENT_EXAM_ID = <?= (int)$student_exam_id ?>;
     </script>

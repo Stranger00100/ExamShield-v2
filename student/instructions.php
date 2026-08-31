@@ -16,7 +16,7 @@ if ($exam_id <= 0) {
     exit();
 }
 
-// 1. Fetch Exam details and verify student registration via MySQLi
+// Check attempt record
 $stmt = $conn->prepare("
     SELECT e.id, e.title, e.subject, e.duration, e.total_marks, se.status AS attempt_status
     FROM exams e 
@@ -30,18 +30,19 @@ $res = $stmt->get_result();
 $exam = $res ? $res->fetch_assoc() : null;
 $stmt->close();
 
-// Redirect if not registered or already submitted
+// If already submitted, redirect straight to results
 if (!$exam || $exam['attempt_status'] === 'submitted') {
-    header("Location: dashboard.php");
+    header("Location: results.php");
     exit();
 }
 
-// If student is already in progress, route directly to exam interface
+// If in progress, forward to exam window
 if ($exam['attempt_status'] === 'started') {
     header("Location: exam.php?exam_id=" . $exam_id);
     exit();
 }
 ?>
+<!-- Rest of your instructions HTML remains unchanged -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
